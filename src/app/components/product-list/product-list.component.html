@@ -1,0 +1,4 @@
+<!--products from the component-->
+<p *ngFor="let tempProduct of products" >
+  {{tempProduct.name}}: {{tempProduct.unitPrice | currency: "USD"}}
+</p>

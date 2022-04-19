@@ -49,6 +49,13 @@ export class ProductService {
       map(response => response._embedded.products)
     );
   }
+
+  getProduct(theProductId: number) {
+    //  build URl based on the product ID
+    const productUrl = `${this.baseUrl}/${theProductId}`;
+
+    return this.httpClient.get<Product>(productUrl);
+  }
 }
 
 

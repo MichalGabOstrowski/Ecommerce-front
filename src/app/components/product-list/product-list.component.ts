@@ -10,11 +10,16 @@ import {ActivatedRoute} from "@angular/router";
 })
 export class ProductListComponent implements OnInit {
 
-  //!!!!!!!!!!!!!!!!!!!!!!!!bez wykrzyknika nie dziala
-  products!: Product[];
-  currentCategoryId!: number;
-  currentCategoryName!: string;
-  searchMode!: boolean;
+  products: Product[] = [];
+  currentCategoryId: number = 1;
+  previousCategoryId: number = 1;
+  currentCategoryName: string = "";
+  searchMode: boolean = false;
+
+  //new properties for pagination
+  thePageNumber: number = 1;
+  thePageSize: number = 10;
+  theTotalElements: number = 0;
 
   //Inject Product Service
   //route -> aktywna sciezka produktow
@@ -71,14 +76,44 @@ export class ProductListComponent implements OnInit {
       this.currentCategoryName = 'Books';
     }
 
-    //wez produkty z servisu po z tym ID
+    //
+    //check if we have a different category than previous
+    //Angular will reuse a component if it is currently being used
+    //
 
+    //if we have a different category id then previous
+    //then set thePageNumber back to 1
+
+    if (this.previousCategoryId != this.currentCategoryId) {
+      this.thePageNumber = 1;
+    }
+
+    this.previousCategoryId = this.currentCategoryId;
+
+    console.log(`currentCategoryId=${this.currentCategoryId}, thePageNumber=${this.thePageNumber}`);
+
+
+    //wez produkty z servisu po z tym ID
+    //in Angular page are 1 based, but in Spring Data REST pages are 0 based
+    this.productService.getProductListPaginate(this.thePageNumber - 1, this.thePageSize, this.currentCategoryId)
+      .subscribe(this.processResult());
     //metoda jest faktycznie wywolywana po subscribe
-    this.productService.getProductList(this.currentCategoryId).subscribe(
-      //  kiedy dane zostana zwrocone, mozemy je przypisac
-      data => {
-        this.products = data;
-      }
-    )
+    //  kiedy dane zostana zwrocone, mozemy je przypisac
+
+  }
+
+
+  //Left Side: properties defined in class
+  //Right Side: data from SPRING DATA REST JSON
+  processResult() {
+
+    //bez Ts ignore nie dziala
+    // @ts-ignore
+    return data => {
+      this.products = data._embedded.products;
+      this.thePageNumber = data.page.number + 1;
+      this.thePageSize = data.page.size;
+      this.theTotalElements = data.page.totalElements;
+    };
   }
 }

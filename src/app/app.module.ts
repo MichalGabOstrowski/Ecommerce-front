@@ -10,6 +10,8 @@ import {ProductCategoryMenuComponent} from './components/product-category-menu/p
 import {SearchComponent} from './components/search/search.component';
 import { ProductDetailsComponent } from './components/product-details/product-details.component';
 
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+
 
 const routes: Routes = [
   //Order of routes is important. First match wins. Start from most specific to general.
@@ -30,14 +32,16 @@ const routes: Routes = [
     ProductListComponent,
     ProductCategoryMenuComponent,
     SearchComponent,
-    ProductDetailsComponent
+    ProductDetailsComponent,
   ],
   imports: [
     //configure Router based on route
     RouterModule.forRoot(routes),
     BrowserModule,
     //  Add HttpClient
-    HttpClientModule
+    HttpClientModule,
+    //ng-bootstrap
+    NgbModule
   ],
   providers: [ProductService],
   bootstrap: [AppComponent]

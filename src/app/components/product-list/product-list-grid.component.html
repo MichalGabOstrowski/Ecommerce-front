@@ -25,6 +25,30 @@
         <!-- '?' chroni przed wartosciami null, lub niezdefiniowanymi w sciezce       -->
         <div *ngIf="products?.length==0" class="alert alert-warning col-md-12" role="alert">Item not found.</div>
       </div>
+      <!-- begin footer-->
+      <div class="footer-pagination">
+        <div class="row">
+          <div class="col-md-6"></div>
+
+          <div class="col-md-6">
+
+            <div class="row">
+              <div class="col-md-9" style="padding-left: 30%">
+
+                <!--Left Side: parameters of ngb-pagination Component -->
+                <!--Right Side: properties for ProductListComponent-->
+                <ngb-pagination [(page)]="thePageNumber"
+                                [pageSize]="thePageSize"
+                                [collectionSize]="theTotalElements"
+                                (pageChange)="listProducts()">
+                </ngb-pagination>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- end footer-->
     </div>
   </div>
 </div>

@@ -18,8 +18,10 @@ export class ProductListComponent implements OnInit {
 
   //new properties for pagination
   thePageNumber: number = 1;
-  thePageSize: number = 10;
+  thePageSize: number = 5;
   theTotalElements: number = 0;
+
+  previousKeyword: string = "";
 
   //Inject Product Service
   //route -> aktywna sciezka produktow
@@ -49,12 +51,19 @@ export class ProductListComponent implements OnInit {
   private handleSearchProducts() {
 
     const theKeyWord: string = this.route.snapshot.paramMap.get('keyword')!;
+    //if we have a different keyword then previous
+    //then set thePageNumber to 1
+    if (this.previousKeyword != theKeyWord) {
+      this.thePageNumber = 1;
+    }
+
+    this.previousKeyword = theKeyWord;
+
+    console.log(`keyword=${theKeyWord}, thePageNumber=${this.thePageNumber}`)
+
     //  search for the products using keywords
-    this.productService.searchProducts(theKeyWord).subscribe(
-      data => {
-        this.products = data;
-      }
-    )
+    this.productService.searchProductsPaginate(this.thePageNumber - 1, this.thePageSize, theKeyWord)
+                        .subscribe(this.processResult())
   }
 
   handleListProducts() {
@@ -107,7 +116,7 @@ export class ProductListComponent implements OnInit {
   //Right Side: data from SPRING DATA REST JSON
   processResult() {
 
-    //bez Ts ignore nie dziala
+    //!!!!!!!!!!!!!!!!!bez Ts ignore nie dziala
     // @ts-ignore
     return data => {
       this.products = data._embedded.products;
@@ -115,5 +124,11 @@ export class ProductListComponent implements OnInit {
       this.thePageSize = data.page.size;
       this.theTotalElements = data.page.totalElements;
     };
+  }
+
+  updatePageSize(pageSize: number) {
+    this.thePageSize = pageSize;
+    this.thePageNumber = 1;
+    this.listProducts();
   }
 }

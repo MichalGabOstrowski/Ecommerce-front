@@ -8,17 +8,20 @@ import {ProductService} from "./services/product.service";
 import {RouterModule, Routes} from "@angular/router";
 import {ProductCategoryMenuComponent} from './components/product-category-menu/product-category-menu.component';
 import {SearchComponent} from './components/search/search.component';
-import { ProductDetailsComponent } from './components/product-details/product-details.component';
+import {ProductDetailsComponent} from './components/product-details/product-details.component';
 
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import { CartStatusComponent } from './components/cart-status/cart-status.component';
-import { CartDetailsComponent } from './components/cart-details/cart-details.component';
+import {CartStatusComponent} from './components/cart-status/cart-status.component';
+import {CartDetailsComponent} from './components/cart-details/cart-details.component';
+import {CheckoutComponent} from './components/checkout/checkout.component';
+import {ReactiveFormsModule} from "@angular/forms";
 
 
 const routes: Routes = [
   //Order of routes is important. First match wins. Start from most specific to general.
 
   //Path to match -> when path matches, create new Instance of component
+  {path: 'checkout', component: CheckoutComponent},
   {path: 'cart-details', component: CartDetailsComponent},
   {path: 'products/:id', component: ProductDetailsComponent},
   {path: 'search/:keyword', component: ProductListComponent},
@@ -38,6 +41,7 @@ const routes: Routes = [
     ProductDetailsComponent,
     CartStatusComponent,
     CartDetailsComponent,
+    CheckoutComponent,
   ],
   imports: [
     //configure Router based on route
@@ -46,7 +50,9 @@ const routes: Routes = [
     //  Add HttpClient
     HttpClientModule,
     //ng-bootstrap
-    NgbModule
+    NgbModule,
+    //  Reactive Forms Module
+    ReactiveFormsModule
   ],
   providers: [ProductService],
   bootstrap: [AppComponent]
